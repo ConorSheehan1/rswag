@@ -17,7 +17,7 @@ module Rswag
         @output.puts 'Generating Swagger docs ...'
       end
 
-      def example_group_finished(notification)
+      def example_group_finished(notification)        
         # NOTE: rspec 2.x support
         if RSPEC_VERSION > 2
           metadata = notification.group.metadata
@@ -31,6 +31,7 @@ module Rswag
       end
 
       def stop(notification=nil)
+        
         @config.swagger_docs.each do |url_path, doc|
           file_path = File.join(@config.swagger_root, url_path)
           dirname = File.dirname(file_path)
@@ -47,13 +48,18 @@ module Rswag
       private
 
       def metadata_to_swagger(metadata)
-        response_code = metadata[:response][:code]
-        response = metadata[:response].reject { |k,v| k == :code }
+        require 'byebug'
+        byebug
+        
+        # response_code = metadata[:response][:code]
+        # response = metadata[:response].reject { |k,v| k == :code }
 
         verb = metadata[:operation][:verb]
+
+        # operation[:responses] change from object to array or objects
         operation = metadata[:operation]
           .reject { |k,v| k == :verb }
-          .merge(responses: { response_code => response })
+          .merge(responses: [ metadata[:response] ])
 
         path_template = metadata[:path_item][:template]
         path_item = metadata[:path_item]

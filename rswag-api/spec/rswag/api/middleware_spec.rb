@@ -76,6 +76,23 @@ module Rswag
             expect(response[2].join).to include('"host":"tempuri.org"')
           end
         end
+
+        context 'when multiple responses for the same code are specified' do
+          let(:env) { env_defaults.merge('PATH_INFO' => 'multi_response/swagger.json') }
+
+          it 'returns multiple 200 status codes' do
+            # require 'byebug'
+            # byebug
+
+            # limitation is in JSON parse
+            # can't have duplicate key
+            # since 
+            json_response = JSON.parse(response[2][0])
+            get_response_codes = json_response["paths"]["/test"]["get"]["responses"].keys
+            expect(response[0]).to eq "200"
+            expect(get_response_codes).to eq ["200"]
+          end
+        end
       end
     end
   end

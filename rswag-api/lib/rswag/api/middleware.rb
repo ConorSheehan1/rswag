@@ -10,6 +10,8 @@ module Rswag
       end
 
       def call(env)
+        # require 'byebug'
+        # byebug
         path = env['PATH_INFO']
         filename = "#{@config.resolve_swagger_root(env)}/#{path}"
 

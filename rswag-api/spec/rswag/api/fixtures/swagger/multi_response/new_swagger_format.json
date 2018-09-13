@@ -1,0 +1,27 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API V1",
+    "version": "v1"
+  },
+  "paths": {
+    "/test": {
+      "get": {
+        "summary": "this is a test",
+        "produces": [
+          "application/json"
+        ],
+        "responses": [
+          {
+            "code": "200",
+            "description": "test 1"
+          },
+          {
+            "code": "200",
+            "description": "test 2"
+          }
+        ]
+      }
+    }
+  }
+}
