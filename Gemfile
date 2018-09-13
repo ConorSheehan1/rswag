@@ -25,6 +25,7 @@ group :test do
   gem 'capybara'
   gem 'capybara-webkit'
   gem 'rswag-specs', path: './rswag-specs'
+  gem 'byebug'  
 end
 
 group :assets do
@@ -32,5 +33,4 @@ group :assets do
   gem 'therubyracer'
 end
 
-gem 'byebug'
 gem 'puma'

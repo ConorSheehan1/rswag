@@ -3,50 +3,50 @@ require 'swagger_helper'
 describe 'Blogs API', type: :request, swagger_doc: 'v1/swagger.json' do
   let(:api_key) { 'fake_key' }
 
-  path '/blogs' do
-    post 'Creates a blog' do
-      tags 'Blogs'
-      description 'Creates a new blog from provided data'
-      operationId 'createBlog'
-      consumes 'application/json'
-      produces 'application/json'
-      parameter name: :blog, in: :body, schema: { '$ref' => '#/definitions/blog' }
+  # path '/blogs' do
+  #   post 'Creates a blog' do
+  #     tags 'Blogs'
+  #     description 'Creates a new blog from provided data'
+  #     operationId 'createBlog'
+  #     consumes 'application/json'
+  #     produces 'application/json'
+  #     parameter name: :blog, in: :body, schema: { '$ref' => '#/definitions/blog' }
 
-      let(:blog) { { title: 'foo', content: 'bar' } }
+  #     let(:blog) { { title: 'foo', content: 'bar' } }
 
-      response '201', 'blog created' do
-        run_test!
-      end
+  #     response '201', 'blog created' do
+  #       run_test!
+  #     end
 
-      response '422', 'invalid request' do
-        schema '$ref' => '#/definitions/errors_object'
+  #     response '422', 'invalid request' do
+  #       schema '$ref' => '#/definitions/errors_object'
 
-        let(:blog) { { title: 'foo' } }
-        run_test! do |response|
-          expect(response.body).to include("can't be blank")
-        end
-      end
-    end
+  #       let(:blog) { { title: 'foo' } }
+  #       run_test! do |response|
+  #         expect(response.body).to include("can't be blank")
+  #       end
+  #     end
+  #   end
 
-    get 'Searches blogs' do
-      tags 'Blogs'
-      description 'Searches blogs by keywords'
-      operationId 'searchBlogs'
-      produces 'application/json'
-      parameter name: :keywords, in: :query, type: 'string'
+  #   get 'Searches blogs' do
+  #     tags 'Blogs'
+  #     description 'Searches blogs by keywords'
+  #     operationId 'searchBlogs'
+  #     produces 'application/json'
+  #     parameter name: :keywords, in: :query, type: 'string'
 
-      let(:keywords) { 'foo bar' }
+  #     let(:keywords) { 'foo bar' }
 
-      response '200', 'success' do
-        schema type: 'array', items: { '$ref' => '#/definitions/blog' }
-      end
+  #     response '200', 'success' do
+  #       schema type: 'array', items: { '$ref' => '#/definitions/blog' }
+  #     end
 
-      response '406', 'unsupported accept header' do
-        let(:'Accept') { 'application/foo' }
-        run_test!
-      end
-    end
-  end
+  #     response '406', 'unsupported accept header' do
+  #       let(:'Accept') { 'application/foo' }
+  #       run_test!
+  #     end
+  #   end
+  # end
 
   path '/blogs/{id}' do
     parameter name: :id, in: :path, type: :string
@@ -82,26 +82,31 @@ describe 'Blogs API', type: :request, swagger_doc: 'v1/swagger.json' do
         let(:id) { 'invalid' }
         run_test!
       end
-    end
-  end
 
-  path '/blogs/{id}/upload' do
-    parameter name: :id, in: :path, type: :string
-
-    let(:id) { blog.id }
-    let(:blog) { Blog.create(title: 'foo', content: 'bar') }
-
-    put 'Uploads a blog thumbnail' do
-      tags 'Blogs'
-      description 'Upload a thumbnail for specific blog by id'
-      operationId 'uploadThumbnailBlog'
-      consumes 'multipart/form-data'
-      parameter name: :file, :in => :formData, :type => :file, required: true
-
-      response '200', 'blog updated' do
-        let(:file) { Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/thumbnail.png")) }
+      response '404', 'blog also not found' do
+        let(:id) { 'other_invalid' }
         run_test!
       end
     end
   end
+
+  # path '/blogs/{id}/upload' do
+  #   parameter name: :id, in: :path, type: :string
+
+  #   let(:id) { blog.id }
+  #   let(:blog) { Blog.create(title: 'foo', content: 'bar') }
+
+  #   put 'Uploads a blog thumbnail' do
+  #     tags 'Blogs'
+  #     description 'Upload a thumbnail for specific blog by id'
+  #     operationId 'uploadThumbnailBlog'
+  #     consumes 'multipart/form-data'
+  #     parameter name: :file, :in => :formData, :type => :file, required: true
+
+  #     response '200', 'blog updated' do
+  #       let(:file) { Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/thumbnail.png")) }
+  #       run_test!
+  #     end
+  #   end
+  # end
 end
